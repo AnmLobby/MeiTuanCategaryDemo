@@ -12,60 +12,68 @@ import android.widget.LinearLayout;
 
 import com.stx.xhb.meituancategorydemo.adapter.CagegoryViewPagerAdapter;
 import com.stx.xhb.meituancategorydemo.adapter.EntranceAdapter;
-import com.stx.xhb.meituancategorydemo.model.ModelHomeEntrance;
+import com.stx.xhb.meituancategorydemo.model.CategoryTab;
 import com.stx.xhb.meituancategorydemo.utils.ScreenUtil;
 import com.stx.xhb.meituancategorydemo.widget.IndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+
 public class MainActivity extends AppCompatActivity {
     public static final int HOME_ENTRANCE_PAGE_SIZE = 10;//首页菜单单页显示数量
     private ViewPager entranceViewPager;
     private LinearLayout homeEntranceLayout;
-    private List<ModelHomeEntrance> homeEntrances;
+    private List<CategoryTab> homeEntrances;
     private IndicatorView entranceIndicatorView;
-
+    private String types;
+    private String icons;
+    private static final int UNDATE_TEXT=1;
+    private  EntranceAdapter entranceAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bmob.initialize(this, "3294a0f092543dc76c82b6b04134ac6f");
         initData();
         initView();
-        init();
+
     }
-
-
     private void initView() {
         homeEntranceLayout = (LinearLayout) findViewById(R.id.home_entrance);
         entranceViewPager = (ViewPager) findViewById(R.id.main_home_entrance_vp);
         entranceIndicatorView = (IndicatorView) findViewById(R.id.main_home_entrance_indicator);
     }
-
-
     private void initData() {
         homeEntrances = new ArrayList<>();
-        homeEntrances.add(new ModelHomeEntrance("美食", R.mipmap.ic_category_0));
-        homeEntrances.add(new ModelHomeEntrance("电影", R.mipmap.ic_category_1));
-        homeEntrances.add(new ModelHomeEntrance("酒店住宿", R.mipmap.ic_category_2));
-        homeEntrances.add(new ModelHomeEntrance("生活服务", R.mipmap.ic_category_3));
-        homeEntrances.add(new ModelHomeEntrance("KTV", R.mipmap.ic_category_4));
-        homeEntrances.add(new ModelHomeEntrance("旅游", R.mipmap.ic_category_5));
-        homeEntrances.add(new ModelHomeEntrance("学习培训", R.mipmap.ic_category_6));
-        homeEntrances.add(new ModelHomeEntrance("汽车服务", R.mipmap.ic_category_7));
-        homeEntrances.add(new ModelHomeEntrance("摄影写真", R.mipmap.ic_category_8));
-        homeEntrances.add(new ModelHomeEntrance("休闲娱乐", R.mipmap.ic_category_10));
-        homeEntrances.add(new ModelHomeEntrance("丽人", R.mipmap.ic_category_11));
-        homeEntrances.add(new ModelHomeEntrance("运动健身", R.mipmap.ic_category_12));
-        homeEntrances.add(new ModelHomeEntrance("大保健", R.mipmap.ic_category_13));
-        homeEntrances.add(new ModelHomeEntrance("团购", R.mipmap.ic_category_14));
-        homeEntrances.add(new ModelHomeEntrance("景点", R.mipmap.ic_category_16));
-        homeEntrances.add(new ModelHomeEntrance("全部分类", R.mipmap.ic_category_15));
+        BmobQuery<CategoryTab> query = new BmobQuery<>();
+        query.order("-createdAt");
+       query.findObjects(this, new FindListener<CategoryTab>() {
+           @Override
+           public void onSuccess(List<CategoryTab> list) {
+               for (int i = 0; i <list.size() ; i++) {
+                   types=list.get(i).getType();
+                   icons=list.get(i).getIconUrl();
+                   homeEntrances.add(new CategoryTab(types,icons));
+               }
+               if (homeEntrances.size()==list.size()){
+                   init();
+               }else {
+
+               }
+
+           }
+           @Override
+           public void onError(int i, String s) {
+           }
+       });
     }
 
     private void init() {
         LinearLayout.LayoutParams layoutParams12 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) ((float) ScreenUtil.getScreenWidth() / 2.0f));
-
         //首页菜单分页
         FrameLayout.LayoutParams entrancelayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (int) ((float) ScreenUtil.getScreenWidth() / 2.0f + 70));
         homeEntranceLayout.setLayoutParams(entrancelayoutParams);
@@ -81,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.item_home_entrance_vp, entranceViewPager, false);
             recyclerView.setLayoutParams(layoutParams12);
             recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 5));
-            EntranceAdapter entranceAdapter = new EntranceAdapter(MainActivity.this, homeEntrances, index, HOME_ENTRANCE_PAGE_SIZE);
+            entranceAdapter = new EntranceAdapter(MainActivity.this, homeEntrances, index, HOME_ENTRANCE_PAGE_SIZE);
             recyclerView.setAdapter(entranceAdapter);
             viewList.add(recyclerView);
         }
@@ -89,10 +97,11 @@ public class MainActivity extends AppCompatActivity {
         entranceViewPager.setAdapter(adapter);
         entranceIndicatorView.setIndicatorCount(entranceViewPager.getAdapter().getCount());
         entranceIndicatorView.setCurrentIndicator(entranceViewPager.getCurrentItem());
+        entranceAdapter.notifyDataSetChanged();
         entranceViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                entranceIndicatorView.setCurrentIndicator(position);
+        entranceIndicatorView.setCurrentIndicator(position);
             }
         });
     }

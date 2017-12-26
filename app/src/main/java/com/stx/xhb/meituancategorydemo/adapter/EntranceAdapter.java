@@ -2,15 +2,18 @@ package com.stx.xhb.meituancategorydemo.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.stx.xhb.meituancategorydemo.R;
-import com.stx.xhb.meituancategorydemo.model.ModelHomeEntrance;
+import com.stx.xhb.meituancategorydemo.model.CategoryTab;
 import com.stx.xhb.meituancategorydemo.utils.ScreenUtil;
 
 import java.util.List;
@@ -24,7 +27,7 @@ import java.util.List;
  */
 public class EntranceAdapter extends RecyclerView.Adapter<EntranceAdapter.EntranceViewHolder> {
 
-    private List<ModelHomeEntrance> mDatas;
+    private List<CategoryTab> mDatas;
 
     /**
      * 页数下标,从0开始(通俗讲第几页)
@@ -40,9 +43,9 @@ public class EntranceAdapter extends RecyclerView.Adapter<EntranceAdapter.Entran
 
     private final LayoutInflater mLayoutInflater;
 
-    private List<ModelHomeEntrance> homeEntrances;
+    private List<CategoryTab> homeEntrances;
 
-    public EntranceAdapter(Context context, List<ModelHomeEntrance> datas, int index, int pageSize) {
+    public EntranceAdapter(Context context, List<CategoryTab> datas, int index, int pageSize) {
         this.mContext = context;
         this.homeEntrances = datas;
         mPageSize = pageSize;
@@ -63,13 +66,14 @@ public class EntranceAdapter extends RecyclerView.Adapter<EntranceAdapter.Entran
          * 在给View绑定显示的数据时，计算正确的position = position + mIndex * mPageSize，
          */
         final int pos = position + mIndex * mPageSize;
-        holder.entranceNameTextView.setText(homeEntrances.get(pos).getName());
-        holder.entranceIconImageView.setImageResource(homeEntrances.get(pos).getImage());
+        Log.e("888", "onBindViewHolder: "+homeEntrances.size() );
+        holder.entranceNameTextView.setText(homeEntrances.get(pos).getType());
+        Glide.with(mContext).load(homeEntrances.get(pos).getIconUrl()).into(holder.entranceIconImageView);
+        Log.e("123", "onBindViewHolder: "+ homeEntrances.get(pos).getIconUrl());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ModelHomeEntrance entrance = homeEntrances.get(pos);
-                // TODO: 2017/5/24 点击事件
+                Toast.makeText(mContext, homeEntrances.get(pos).getType(), Toast.LENGTH_SHORT).show();
             }
         });
     }
