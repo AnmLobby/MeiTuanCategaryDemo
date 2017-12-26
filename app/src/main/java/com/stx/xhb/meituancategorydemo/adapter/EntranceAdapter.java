@@ -68,8 +68,12 @@ public class EntranceAdapter extends RecyclerView.Adapter<EntranceAdapter.Entran
         final int pos = position + mIndex * mPageSize;
         Log.e("888", "onBindViewHolder: "+homeEntrances.size() );
         holder.entranceNameTextView.setText(homeEntrances.get(pos).getType());
-        Glide.with(mContext).load(homeEntrances.get(pos).getIconUrl()).into(holder.entranceIconImageView);
-        Log.e("123", "onBindViewHolder: "+ homeEntrances.get(pos).getIconUrl());
+        if (homeEntrances.get(pos).getTypeIcon().getUrl()!=null){
+            Glide.with(mContext)
+                    .load(homeEntrances.get(pos).getTypeIcon().getUrl())
+                    .into(holder.entranceIconImageView);
+        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

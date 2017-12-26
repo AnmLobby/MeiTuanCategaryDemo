@@ -19,8 +19,8 @@ import com.stx.xhb.meituancategorydemo.widget.IndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private List<CategoryTab> homeEntrances;
     private IndicatorView entranceIndicatorView;
     private String types;
-    private String icons;
+    private BmobFile icons;
     private static final int UNDATE_TEXT=1;
     private  EntranceAdapter entranceAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Bmob.initialize(this, "3294a0f092543dc76c82b6b04134ac6f");
+
         initData();
         initView();
 
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
            public void onSuccess(List<CategoryTab> list) {
                for (int i = 0; i <list.size() ; i++) {
                    types=list.get(i).getType();
-                   icons=list.get(i).getIconUrl();
+                   icons=list.get(i).getTypeIcon();
                    homeEntrances.add(new CategoryTab(types,icons));
                }
                if (homeEntrances.size()==list.size()){

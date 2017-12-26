@@ -25,17 +25,6 @@ public class ScreenUtil {
         return (int) (dipValue * scale + 0.5f);
     }
 
-    public static int px2dip(float pxValue) {
-        return (int) (pxValue / scale + 0.5f);
-    }
-
-    public static int px2sp(float pxValue) {
-        return (int) (pxValue / scale + 0.5f);
-    }
-
-    public static int getScreenHeight() {
-        return screenHeight;
-    }
 
     public static int getScreenWidth() {
         return screenWidth;

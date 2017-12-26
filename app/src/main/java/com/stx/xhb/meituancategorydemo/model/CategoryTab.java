@@ -1,6 +1,7 @@
 package com.stx.xhb.meituancategorydemo.model;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Author: Mr.xiao on 2017/5/23
@@ -11,7 +12,16 @@ import cn.bmob.v3.BmobObject;
  */
 public class CategoryTab extends BmobObject {
     private String type;
-    private String iconUrl;
+    private BmobFile typeIcon;
+    public BmobFile getTypeIcon() {
+        return typeIcon;
+    }
+
+    public void setTypeIcon(BmobFile typeIcon) {
+        this.typeIcon = typeIcon;
+    }
+
+
     public String getType() {
         return type;
     }
@@ -20,19 +30,9 @@ public class CategoryTab extends BmobObject {
         this.type = type;
     }
 
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
-
-
-    public CategoryTab(String type, String iconUrl) {
+    public CategoryTab(String type, BmobFile typeIcon) {
         this.type = type;
-        this.iconUrl = iconUrl;
+        this.typeIcon = typeIcon;
     }
 
 
