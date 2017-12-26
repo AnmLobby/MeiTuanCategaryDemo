@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.stx.xhb.meituancategorydemo.utils.ScreenUtil;
 
+import cn.bmob.v3.Bmob;
+
 /**
  * Author: Mr.xiao on 2017/5/24
  *
@@ -17,5 +19,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ScreenUtil.init(this);
+        Bmob.initialize(this, "3294a0f092543dc76c82b6b04134ac6f");
     }
 }
